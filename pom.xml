@@ -10,11 +10,25 @@
     <name>maven-web-application</name>
     <description>Sample Maven Web Application for Deepak</description>
 
+    <!-- Consolidated properties section -->
     <properties>
         <jdk.version>1.8</jdk.version>
         <spring.version>5.1.2.RELEASE</spring.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- SonarQube properties -->
+        <sonar.host.url>http://13.127.169.229:9000/</sonar.host.url>
+        <sonar.login>squ_229359c90753165ef0e22197dfdc845f6ffd739b</sonar.login>
+        <sonar.projectKey>com.deepak:webapp</sonar.projectKey>
+        <sonar.projectName>Java Deepak WebApp</sonar.projectName>
+        <sonar.projectVersion>1.0.0</sonar.projectVersion>
+        <sonar.projectTags>java,maven,webapp</sonar.projectTags>
+        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+        <sonar.language>java</sonar.language>
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.tests>src/test/java</sonar.tests>
+        <sonar.java.binaries>target/classes</sonar.java.binaries>
     </properties>
 
     <dependencies>
@@ -46,31 +60,6 @@
             <version>1.2</version>
         </dependency>
     </dependencies>
-     <!-- SonarQube properties -->
-    <properties>
-        <!-- SonarQube server URL -->
-        <sonar.host.url>http://13.127.169.229:9000/</sonar.host.url>
-        
-        <!-- Authentication token (if required) -->
-        <sonar.login>squ_229359c90753165ef0e22197dfdc845f6ffd739b</sonar.login>
-
-        <!-- Project-specific configuration -->
-        <sonar.projectKey>com.deepak:webapp</sonar.projectKey>
-        <sonar.projectName>Java Deepak WebApp</sonar.projectName>
-        <sonar.projectVersion>1.0.0</sonar.projectVersion>
-
-        <!-- Optional tags for better organization -->
-        <sonar.projectTags>java,maven,webapp</sonar.projectTags>
-
-        <!-- Encoding settings -->
-        <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
-
-        <!-- Optional: Language and file inclusions -->
-        <sonar.language>java</sonar.language>
-        <sonar.sources>src/main/java</sonar.sources>
-        <sonar.tests>src/test/java</sonar.tests>
-        <sonar.java.binaries>target/classes</sonar.java.binaries>
-    </properties> <!-- SonarQube properties -->
 
     <build>
         <finalName>java-deepak-webapp</finalName>
@@ -85,11 +74,14 @@
                     <target>${jdk.version}</target>
                 </configuration>
             </plugin>
+
+            <!-- SonarQube Maven Plugin -->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.9.1.2184</version>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
