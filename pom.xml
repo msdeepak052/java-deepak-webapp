@@ -27,7 +27,6 @@
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
         <sonar.language>java</sonar.language>
         <sonar.sources>src/main/java</sonar.sources>
-        <sonar.tests>src/test/java</sonar.tests>
         <sonar.java.binaries>target/classes</sonar.java.binaries>
     </properties>
 
@@ -60,6 +59,21 @@
             <version>1.2</version>
         </dependency>
     </dependencies>
+
+     <!-- Distribution Management -->
+    <distributionManagement>
+        <!-- Release Repository -->
+        <repository>
+            <id>nexus</id>
+            <url>http://13.233.143.207:8081/repository/java-web-app-releases/</url>
+        </repository>
+
+        <!-- Snapshot Repository -->
+        <snapshotRepository>
+            <id>nexus</id>
+            <url>http://13.233.143.207:8081/repository/java-web-app-snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <finalName>java-deepak-webapp</finalName>
