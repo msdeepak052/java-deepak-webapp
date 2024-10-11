@@ -52,6 +52,6 @@
         <a href="mailto:yadav.deepak012@gmail.com">Email Me</a>
     </div>
     <hr>
-    <p align="center"><a href="services/employee/getEmployeeDetails">Get Employee Details</a></p>
+    <p align="center"><a href="employee/getEmployeeDetails">Get Employee Details</a></p>
 </body>
 </html>
