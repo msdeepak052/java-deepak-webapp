@@ -14,10 +14,10 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   
-  <servlet-mapping>
+<servlet-mapping>
     <servlet-name>deepak</servlet-name>
-    <url-pattern>/services/*</url-pattern>
-  </servlet-mapping>
+    <url-pattern>/employee/*</url-pattern>
+</servlet-mapping>
   
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
