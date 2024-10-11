@@ -26,7 +26,7 @@
 </head>
 <body>
     <h1 align="center">DevOps Engineer Enthusiast - Deepak Yadav</h1>
-    <h2 align="center"> Learning DevOps: Tools - AWS, Kubernetes, Docker, Azure, CI/CD, Terraform, Ansible</h2>
+    <h2 align="center"> Learning DevOps: Tools - AWS, Kubernetes, Docker, Azure, CI/CD, Terraform, Ansible, Argo CD</h2>
     <hr>
     <h3>Server Information:</h3>
     <p>Server IP Address: 
