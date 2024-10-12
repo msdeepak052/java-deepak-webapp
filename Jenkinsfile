@@ -5,6 +5,7 @@ node{
     echo "The Nod ename is: ${env.NODE_NAME}"
     echo "The Build Number is: ${env.BUILD_NUMBER}"
     echo "The Jenkins Home directory is: ${JENKINS_HOME}"
+    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '3', daysToKeepStr: '', numToKeepStr: '3'))])
     
     // Git checkout stage 
     
