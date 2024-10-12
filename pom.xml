@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- SonarQube properties -->
+        <!-- SonarQube properties 
         <sonar.host.url>http://13.127.169.229:9000/</sonar.host.url>
         <sonar.login>squ_229359c90753165ef0e22197dfdc845f6ffd739b</sonar.login>
         <sonar.projectKey>com.deepak:webapp</sonar.projectKey>
@@ -27,7 +27,7 @@
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
         <sonar.language>java</sonar.language>
         <sonar.sources>src/main/java</sonar.sources>
-        <sonar.java.binaries>target/classes</sonar.java.binaries>
+        <sonar.java.binaries>target/classes</sonar.java.binaries> -->
     </properties>
 
     <dependencies>
@@ -89,12 +89,12 @@
                 </configuration>
             </plugin>
 
-            <!-- SonarQube Maven Plugin -->
+            <!-- SonarQube Maven Plugin 
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.9.1.2184</version>
-            </plugin>
+            </plugin> -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
