@@ -1,6 +1,10 @@
 node{
     
     def mavenHome = tool name: "maven-3.8.5"
+    echo "The Job name is: ${env.JOB_NAME}"
+    echo "The Nod ename is: ${env.NODE_NAME}"
+    echo "The Build Number is: ${env.BUILD_NUMBER}"
+    echo "The Jenkins Home directory is: ${JENKINS_HOME}"
     
     // Git checkout stage 
     
