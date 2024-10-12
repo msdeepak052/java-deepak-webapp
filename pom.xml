@@ -65,13 +65,13 @@
         <!-- Release Repository -->
         <repository>
             <id>nexus</id>
-            <url>http://13.233.143.207:8081/repository/java-web-app-releases/</url>
+            <url>http://13.201.120.40:8081/repository/java-web-app-releases/</url>
         </repository>
 
         <!-- Snapshot Repository -->
         <snapshotRepository>
             <id>nexus</id>
-            <url>http://13.233.143.207:8081/repository/java-web-app-snapshot/</url>
+            <url>http://13.201.120.40:8081/repository/java-web-app-snapshot/</url>
         </snapshotRepository>
     </distributionManagement>
 
