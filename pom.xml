@@ -18,7 +18,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- SonarQube properties -->
-        <sonar.host.url>http://13.127.169.229:9000/</sonar.host.url>
+        <sonar.host.url>http://13.201.35.250:9000/</sonar.host.url>
         <sonar.token>squ_229359c90753165ef0e22197dfdc845f6ffd739b</sonar.token>
         <sonar.projectKey>com.deepak:webapp</sonar.projectKey>
         <sonar.projectName>Java Deepak WebApp</sonar.projectName>
