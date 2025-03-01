@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>DevOps Engineer - Deepak</title>
+    <title>DevOps Engineer - Deepak Yadav</title>
     <link href="images/deepakdevops.jpg" rel="icon">
     <script type="text/javascript">
         function updateClock() {
