@@ -6,7 +6,7 @@ node{
     echo "The Build Number is: ${env.BUILD_NUMBER}"
     echo "The Jenkins Home directory is: ${JENKINS_HOME}"
     properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '3', daysToKeepStr: '', numToKeepStr: '3'))])
-    buildName 'dev - ${BUILD_NUMBER}'
+   currentBuild.displayName = "dev - ${env.BUILD_NUMBER}"
     
     // Git checkout stage 
     
