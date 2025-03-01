@@ -1,0 +1,52 @@
+node{
+    
+   def mavenhome = tool name: "maven-3.8.5"
+
+    echo "The Job name is: ${env.JOB_NAME}"
+    echo "The Node name is: ${env.NODE_NAME}"
+    echo "The Build Number is: ${env.BUILD_NUMBER}"
+    echo "The Jenkins Home directory is: ${JENKINS_HOME}"
+    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '3', daysToKeepStr: '', numToKeepStr: '3'))])
+    // buildName 'dev - ${BUILD_NUMBER}'
+    currentBuild.displayName = "dev - ${env.BUILD_NUMBER}"
+    // Checkout Stage
+    stage('CheckoutCode'){
+        
+        git branch: 'development', changelog: false, credentialsId: 'e8705cfd-0765-4265-86e8-853b92375d2d', poll: false, url: 'https://github.com/msdeepak052/java-deepak-webapp.git'
+    }
+    
+    // Build Stage
+    
+     stage('Build Maven'){
+        
+        sh "echo -e $mavenhome"
+        sh "$mavenhome/bin/mvn clean package"
+    }
+    
+      // SonarQube Stage
+    
+     stage('SonarQube Stage'){
+        
+        sh "$mavenhome/bin/mvn sonar:sonar"
+    }
+    
+         // Nexus Repo Stage
+    
+    stage('Nexus Repo Stage'){
+        
+        sh "$mavenhome/bin/mvn deploy"
+    }
+    
+    // Tomcat Deloy
+    stage('Tomcat Deloy Stage'){
+        
+    sshagent(['c3965cb2-7035-4283-8f2f-3a39a928daf5']) {
+    sh "ls -lrt"
+    sh "pwd"
+    sh "scp -o StrictHostKeyChecking=no target/java-deepak-webapp.war ec2-user@13.233.101.191:/opt/tomcat9/webapps "
+    
+        
+    }
+    }
+    
+}
