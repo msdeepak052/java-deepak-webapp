@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+    
+    tools{
+        maven "maven-3.8.5"
+    }
+    
+    options {
+        buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '2')
+    }
+    
+    triggers {
+        pollSCM '* * * * *'
+        // cron '* * * * *'
+    }
+    
+    post {
+  always {
+    echo 'Build Done'
+  }
+  success {
+    echo 'Success'
+  }
+  failure {
+    echo 'Failure'
+  }
+}
+
+
+    stages {
+        
+        // Git Checkout
+        stage('Git Checkout') {
+            steps {
+                git branch: 'development', changelog: false, credentialsId: 'e8705cfd-0765-4265-86e8-853b92375d2d', poll: false, url: 'https://github.com/msdeepak052/java-deepak-webapp.git'
+            }
+        }
+        
+        //Maven Build
+        
+        stage('Maven Build') {
+            steps {
+                sh "mvn clean package"
+            }
+        }
+        
+        // SonarQube Check
+        
+        stage('SonarQube Check') {
+            steps {
+                sh "mvn sonar:sonar"
+            }
+        }
+        
+        // Nexus Repo Upload
+        
+        stage('Nexus Repo Upload') {
+            steps {
+                sh "mvn deploy"
+            }
+        }
+        
+        // Deploy war file to tomcat
+        
+        stage('Deploy war file to tomcat') {
+            steps {
+                sshagent(['c3965cb2-7035-4283-8f2f-3a39a928daf5']) {
+                    sh "ls -lrt"
+                    sh "pwd"
+                    sh "scp -o StrictHostKeyChecking=no target/java-deepak-webapp.war ec2-user@13.201.133.84:/opt/tomcat9/webapps "
+                    
+                }
+            }
+        }
+        
+        
+    }
+}
