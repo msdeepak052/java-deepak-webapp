@@ -1,0 +1,390 @@
+# Scenario 1: Continuous Integration for a Java Application
+
+node {
+    stage('Preparation') {
+        cleanWs()
+        git url: 'https://github.com/your-repo/java-app.git', branch: 'main'
+    }
+
+    stage('Build') {
+        sh 'mvn clean package'
+    }
+
+    stage('Test') {
+        try {
+            sh 'mvn test'
+        } catch (Exception e) {
+            currentBuild.result = 'FAILURE'
+            echo "Tests failed: ${e.message}"
+        }
+    }
+
+    stage('Archive') {
+        if (currentBuild.result == 'SUCCESS') {
+            archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+        }
+    }
+
+    stage('Deploy') {
+        if (currentBuild.result == 'SUCCESS') {
+            sh 'scp target/myapp.jar user@server:/path/to/deploy'
+        } else {
+            echo 'Skipping deployment due to previous errors.'
+        }
+    }
+}
+
+# --------------------------------------------------------------------------------
+
+# Scenario 2: Multi-Branch Pipeline for a Node.js Application
+
+node {
+    stage('Preparation') {
+        cleanWs()
+        git url: 'https://github.com/your-repo/node-app.git', branch: env.BRANCH_NAME
+    }
+
+    stage('Install Dependencies') {
+        sh 'npm install'
+    }
+
+    stage('Build') {
+        sh 'npm run build'
+    }
+
+    stage('Test') {
+        try {
+            sh 'npm test'
+        } catch (Exception e) {
+            currentBuild.result = 'FAILURE'
+            echo "Tests failed: ${e.message}"
+        }
+    }
+
+    stage('Deploy') {
+        if (currentBuild.result == 'SUCCESS') {
+            sh 'npm run deploy'
+        } else {
+            echo 'Skipping deployment due to previous errors.'
+        }
+    }
+}
+
+# --------------------------------------------------------------------------------
+
+# Scenario 3: Dockerized Application Deployment
+
+node {
+    stage('Preparation') {
+        cleanWs()
+        git url: 'https://github.com/your-repo/microservice.git', branch: 'main'
+    }
+
+    stage('Build Docker Image') {
+        sh 'docker build -t myapp:${env.BUILD_ID} .'
+    }
+
+    stage('Run Tests') {
+        try {
+            sh 'docker run myapp:${env.BUILD_ID} npm test'
+        } catch (Exception e) {
+            currentBuild.result = 'FAILURE'
+            echo "Tests failed: ${e.message}"
+        }
+    }
+
+    stage('Push Docker Image') {
+        if (currentBuild.result == 'SUCCESS') {
+            sh 'docker push myapp:${env.BUILD_ID}'
+        } else {
+            echo 'Skipping push due to previous errors.'
+        }
+    }
+
+    stage('Deploy') {
+        if (currentBuild.result == 'SUCCESS') {
+            sh 'ssh user@server "docker pull myapp:${env.BUILD_ID} && docker run -d myapp:${env.BUILD_ID}"'
+        } else {
+            echo 'Skipping deployment due to previous errors.'
+        }
+    }
+}
+
+# --------------------------------------------------------------------------------
+
+# Scenario 4: Scheduled Backup of a Database
+
+node {
+    stage('Backup Database') {
+        sh 'pg_dump -U dbuser -h dbhost dbname > /backups/db_backup_$(date +%Y%m%d).sql'
+    }
+
+    stage('Upload to S3') {
+        try {
+            sh 'aws s3 cp /backups/db_backup_$(date +%Y%m%d).sql s3://mybucket/backups/'
+        } catch (Exception e) {
+            currentBuild.result = 'FAILURE'
+            echo "Upload failed: ${e.message}"
+        }
+    }
+}
+
+# --------------------------------------------------------------------------------
+
+
+# Scenario 5: Static Code Analysis and Quality Gate
+
+node {
+    stage('Preparation') {
+        cleanWs()
+        git url: 'https://github.com/your-repo/java-app.git', branch: 'main'
+    }
+
+    stage('Build') {
+        sh 'mvn clean package'
+    }
+
+    stage('Static Code Analysis') {
+        sh '''
+            mvn sonar:sonar \
+            -Dsonar.projectKey=myapp \
+            -Dsonar.host.url=http://sonarqube:9000 \
+            -Dsonar.login=my_sonar_token
+        '''
+    }
+
+    stage('Quality Gate') {
+        timeout(time: 5, unit: 'MINUTES') {
+            script {
+                def qualityGateStatus = ''
+                while (qualityGateStatus != 'OK') {
+                    sleep(time: 30, unit: 'SECONDS')
+                    qualityGateStatus = sh(script: "curl -s -u my_sonar_token: '' http://sonarqube:9000/api/qualitygates/project_status?projectKey=myapp | jq -r '.projectStatus.status'", returnStdout: true).trim()
+                    echo "Current Quality Gate Status: ${qualityGateStatus}"
+                }
+            }
+        }
+    }
+
+    stage('OWASP Dependency Check') {
+        // Run OWASP Dependency-Check
+        sh '''
+            mvn org.owasp:dependency-check-maven:check \
+            -DfailOnError=true \
+            -Dformat=ALL
+        '''
+    }
+
+    stage('Publish to Nexus') {
+        // Publish the built artifact to Nexus
+        sh '''
+            mvn deploy:deploy-file \
+            -DgroupId=com.example \
+            -DartifactId=myapp \
+            -Dversion=${env.BUILD_ID} \
+            -Dpackaging=jar \
+            -Dfile=target/myapp-${env.BUILD_ID}.jar \
+            -DrepositoryId=nexus-repo \
+            -Durl=http://nexus:8081/repository/maven-releases/
+        '''
+    }
+
+    stage('Build Docker Image') {
+        // Build the Docker image
+        sh "docker build -t mydockerhub/myapp:${env.BUILD_ID} ."
+    }
+
+    stage('Trivy Scan') {
+        // Scan the Docker image for vulnerabilities using Trivy
+        sh "trivy image --exit-code 1 --severity HIGH,CRITICAL mydockerhub/myapp:${env.BUILD_ID} || true"
+    }
+
+    stage('Push Docker Image') {
+        // Push the Docker image to Docker Hub
+        sh "docker push mydockerhub/myapp:${env.BUILD_ID}"
+    }
+
+    stage('Deploy to Kubernetes') {
+        // Deploy the application to Kubernetes
+        sh '''
+            kubectl set image deployment/myapp myapp=mydockerhub/myapp:${env.BUILD_ID} --namespace=my-namespace
+            kubectl rollout status deployment/myapp --namespace=my-namespace
+        '''
+    }
+}
+
+# --------------------------------------------------------------------------------
+
+# Complete Jenkins Scripted Pipeline Example with Trivy and OWASP
+
+node {
+    // Define environment variables
+    def appName = 'my-java-app'
+    def gitRepo = 'https://github.com/your-repo/my-java-app.git'
+    def branchName = 'main'
+    def nexusRepo = 'http://nexus:8081/repository/maven-releases/'
+    def dockerImage = "mydockerhub/${appName}:${env.BUILD_ID}"
+    def kubernetesNamespace = 'my-namespace'
+
+    stage('Preparation') {
+        cleanWs()
+        // Checkout the code from the repository
+        git url: gitRepo, branch: branchName
+    }
+
+    stage('Build') {
+        // Build the application using Maven
+        sh 'mvn clean package'
+    }
+
+    stage('Static Code Analysis') {
+        // Run SonarQube analysis
+        sh '''
+            mvn sonar:sonar \
+            -Dsonar.projectKey=${appName} \
+            -Dsonar.host.url=http://sonarqube:9000 \
+            -Dsonar.login=my_sonar_token
+        '''
+    }
+
+    stage('Quality Gate') {
+        // Wait for SonarQube quality gate status
+        timeout(time: 5, unit: 'MINUTES') {
+            script {
+                def qualityGateStatus = ''
+                while (qualityGateStatus != 'OK') {
+                    sleep(time: 30, unit: 'SECONDS')
+                    qualityGateStatus = sh(script: "curl -s -u my_sonar_token: '' http://sonarqube:9000/api/qualitygates/project_status?projectKey=${appName} | jq -r '.projectStatus.status'", returnStdout: true).trim()
+                    echo "Current Quality Gate Status: ${qualityGateStatus}"
+                }
+            }
+        }
+    }
+
+    stage('OWASP Dependency Check') {
+        // Run OWASP Dependency-Check
+        sh '''
+            mvn org.owasp:dependency-check-maven:check \
+            -DfailOnError=true \
+            -Dformat=ALL
+        '''
+    }
+
+    stage('Publish to Nexus') {
+        // Publish the built artifact to Nexus
+        sh '''
+            mvn deploy:deploy-file \
+            -DgroupId=com.example \
+            -DartifactId=${appName} \
+            -Dversion=${env.BUILD_ID} \
+            -Dpackaging=jar \
+            -Dfile=target/${appName}-${env.BUILD_ID}.jar \
+            -DrepositoryId=nexus-repo \
+            -Durl=${nexusRepo}
+        '''
+    }
+
+    stage('Build Docker Image') {
+        // Build the Docker image
+        sh "docker build -t ${dockerImage} ."
+    }
+
+    stage('Trivy Scan') {
+        // Scan the Docker image for vulnerabilities using Trivy
+        sh "trivy image --exit-code 1 --severity HIGH,CRITICAL ${dockerImage} || true"
+    }
+
+    stage('Push Docker Image') {
+        // Push the Docker image to Docker Hub
+        sh "docker push ${dockerImage}"
+    }
+
+    stage('Deploy to Kubernetes') {
+        // Deploy the application to Kubernetes
+        sh '''
+            kubectl set image deployment/${appName} ${appName}=${dockerImage} --namespace=${kubernetesNamespace}
+            kubectl rollout status deployment/${appName} --namespace=${kubernetesNamespace}
+        '''
+    }
+}
+
+# --------------------------------------------------------------------------------
+# Complete Jenkins Scripted Pipeline Example with Git Clone, Trivy, and OWASP
+
+node {
+    // Define environment variables
+    def appName = 'my-java-app'
+    def gitRepo = 'https://github.com/your-repo/my-java-app.git'
+    def branchName = 'main'
+    def dockerImage = "mydockerhub/${appName}:${env.BUILD_ID}"
+    def kubernetesNamespace = 'my-namespace'
+
+    stage('Preparation') {
+        cleanWs()
+        // Clone the code from the repository
+        sh "git clone -b ${branchName} ${gitRepo} ."
+    }
+
+    stage('Build') {
+        // Build the application using Maven
+        sh 'mvn clean package'
+    }
+
+    stage('Static Code Analysis') {
+        // Run SonarQube analysis
+        sh '''
+            mvn sonar:sonar \
+            -Dsonar.projectKey=${appName} \
+            -Dsonar.host.url=http://sonarqube:9000 \
+            -Dsonar.login=my_sonar_token
+        '''
+    }
+
+    stage('Quality Gate') {
+        // Wait for SonarQube quality gate status
+        timeout(time: 5, unit: 'MINUTES') {
+            script {
+                def qualityGateStatus = ''
+                while (qualityGateStatus != 'OK') {
+                    sleep(time: 30, unit: 'SECONDS')
+                    qualityGateStatus = sh(script: "curl -s -u my_sonar_token: '' http://sonarqube:9000/api/qualitygates/project_status?projectKey=${appName} | jq -r '.projectStatus.status'", returnStdout: true).trim()
+                    echo "Current Quality Gate Status: ${qualityGateStatus}"
+                }
+            }
+        }
+    }
+
+    stage('OWASP Dependency Check') {
+        // Run OWASP Dependency-Check
+        sh '''
+            mvn org.owasp:dependency-check-maven:check \
+            -DfailOnError=true \
+            -Dformat=ALL
+        '''
+    }
+
+    stage('Build Docker Image') {
+        // Build the Docker image
+        sh "docker build -t ${dockerImage} ."
+    }
+
+    stage('Trivy Scan') {
+        // Scan the Docker image for vulnerabilities using Trivy
+        sh "trivy image --exit-code 1 --severity HIGH,CRITICAL ${dockerImage} || true"
+    }
+
+    stage('Push Docker Image') {
+        // Push the Docker image to Docker Hub
+        sh "docker push ${dockerImage}"
+    }
+
+    stage('Deploy to Kubernetes') {
+        // Deploy the application to Kubernetes
+        sh '''
+            kubectl set image deployment/${appName} ${appName}=${dockerImage} --namespace=${kubernetesNamespace}
+            kubectl rollout status deployment/${appName} --namespace=${kubernetesNamespace}
+        '''
+    }
+}
+
+# --------------------------------------------------------------------------------

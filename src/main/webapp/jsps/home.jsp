@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>DevOps Engineer - Deepak</title>
+    <title>DevOps Engineer - Deepak Yadav</title>
     <link href="images/deepakdevops.jpg" rel="icon">
     <script type="text/javascript">
         function updateClock() {
@@ -25,7 +25,7 @@
     </script>
 </head>
 <body>
-    <h1 align="center">DevOps Engineer Enthusiast - Deepak Yadav</h1>
+    <h1 align="center">DevOps Engineer Enthusiast - Deepak Yadav from Uttar Pradesh, India </h1>
     <h2 align="center"> Learning DevOps: Tools - AWS, Kubernetes, Docker, Azure, CI/CD, Terraform, Ansible, Argo CD</h2>
     <hr>
     <h3>Server Information:</h3>
@@ -52,6 +52,6 @@
         <a href="mailto:yadav.deepak012@gmail.com">Email Me</a>
     </div>
     <hr>
-    <p align="center"><a href="services/employee/getEmployeeDetails">Get Employee Details</a></p>
+    <p align="center"><a href="employee/getEmployeeDetails">Get Employee Details</a></p>
 </body>
 </html>
