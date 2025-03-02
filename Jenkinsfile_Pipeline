@@ -15,20 +15,30 @@ pipeline {
     }
     
     post {
-  always {
-    echo 'Build Done'
-  }
-  success {
-    echo 'Success'
-  }
-  failure {
-    echo 'Failure'
-  }
-}
-
+      always {
+        echo 'Build Done'
+      }
+      success {
+        echo 'Success'
+      }
+      failure {
+        echo 'Failure'
+      }
+    }
 
     stages {
         
+       // Print Environment Variables
+       stage('Print Environment Variables') {
+            steps {
+                script {
+                    echo "The Job name is: ${env.JOB_NAME}"
+                    echo "The Node name is: ${env.NODE_NAME}"
+                    echo "The Build Number is: ${env.BUILD_NUMBER}"
+                    echo "The Jenkins Home directory is: ${env.JENKINS_HOME}"
+                }
+            }
+        }
         // Git Checkout
         stage('Git Checkout') {
             steps {
