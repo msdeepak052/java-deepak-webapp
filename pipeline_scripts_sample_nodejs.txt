@@ -1,0 +1,58 @@
+node{
+    
+    // Git checkout stage 
+    
+    stage('CheckoutCode'){
+        git branch: 'development', credentialsId: 'Jenkins', url: 'https://github.com/msdeepak052/nodejs-app.git'
+    }
+    
+    // Build stage
+    
+    stage('Build Nodejs') {
+        nodejs(nodeJSInstallationName: 'NodeJS-22.9') {
+            sh "npm cache clean --force"
+            sh "npm install"
+            sh "npm list sonarqube-scanner"
+        }
+        sh "chmod -R 777 ."
+    }
+    
+    //SonarQube Report
+    
+    stage('Execute SonarQube Report') {
+        nodejs(nodeJSInstallationName: 'NodeJS-22.9') {
+            sh "npm run sonar"
+        }
+    }
+    
+    // Nexus Artifactory Upload
+    
+    stage('Nexus Repo Upload') {
+        sh "npm publish"
+    }
+    
+    //Run the Nodejs app
+    
+   
+   // Install PM2 locally
+    stage('Install PM2') {
+        sh "npm install pm2 --save-dev"
+    }
+
+    
+   // Run the Node.js app
+    stage('Run the Node.js App') {
+        sh "ls -lrt"
+        // Start the application using the local pm2
+        sh "./node_modules/.bin/pm2 start app.js --name devops-webpage -f"
+    }
+
+
+    // Optional: Display PM2 processes
+    stage('Show PM2 Processes') {
+        sh "pm2 list"
+    }
+    
+    
+    
+}
