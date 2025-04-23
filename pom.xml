@@ -65,13 +65,13 @@
         <!-- Release Repository -->
         <repository>
             <id>nexus</id>
-            <url>http://3.108.218.209:8081/repository/java-deepak-webapp-releases/</url>
+            <url>http://13.234.78.244:8081/repository/java-web-app-releases/</url>
         </repository>
 
         <!-- Snapshot Repository -->
         <snapshotRepository>
             <id>nexus</id>
-            <url>http://3.108.218.209:8081/repository/java-deepak-webapp-snapshot/</url>
+            <url>http://13.234.78.244:8081/repository/java-web-app-snapshot/</url>
         </snapshotRepository>
     </distributionManagement>
 
