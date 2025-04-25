@@ -16,7 +16,7 @@ pipeline {
     
     post {
       always {
-        echo 'Build Done'
+        echo 'Build finished: ${currentBuild.displayName}'
       }
       success {
         echo 'Success'
@@ -36,6 +36,7 @@ pipeline {
                     echo "The Node name is: ${env.NODE_NAME}"
                     echo "The Build Number is: ${env.BUILD_NUMBER}"
                     echo "The Jenkins Home directory is: ${env.JENKINS_HOME}"
+                    currentBuild.displayName = "#${env.BUILD_NUMBER} - My Build Name"
                 }
             }
         }
