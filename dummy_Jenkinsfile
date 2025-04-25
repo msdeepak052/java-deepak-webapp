@@ -1,0 +1,72 @@
+pipeline {
+    agent any
+    
+    tools{
+        maven "maven-3.8.5"
+    }
+    
+    options {
+        buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '1', numToKeepStr: '1')
+    }
+
+
+    stages {
+        
+        // Print Environment Variables
+       stage('Print Environment Variables') {
+            steps {
+                script {
+                    echo "The Job name is: ${env.JOB_NAME}"
+                    echo "The Node name is: ${env.NODE_NAME}"
+                    echo "The Build Number is: ${env.BUILD_NUMBER}"
+                    echo "The Jenkins Home directory is: ${env.JENKINS_HOME}"
+                    currentBuild.displayName = "dev - ${env.BUILD_NUMBER}"
+                }
+            }
+        }
+        
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', credentialsId: 'Jenkins', url: 'https://github.com/msdeepak052/java-deepak-webapp.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh "mvn clean package"
+            }
+        }
+        stage('SonarQube Check') {
+            steps {
+                sh "mvn sonar:sonar"
+            }
+        }
+        
+        stage('Nexus Repo Upload') {
+            steps {
+                sh "mvn deploy"
+            }
+        }
+        
+        stage('DeployToContainer') {
+            steps {
+                sshagent(['cf4fd662-cacd-45fa-ab1b-f4a8716889b1']) {
+                    sh "scp -o StrictHostKeyChecking=no target/java-deepak-webapp.war ubuntu@13.232.172.14:/opt/tomcat9/webapps "
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo "Build finished: ${currentBuild.displayName}"
+         }
+        success {
+            echo "Build Success"
+        }
+        failure {
+            echo "Build Failure"
+        }
+}
+
+}
