@@ -11,7 +11,7 @@ node{
     // Git checkout stage 
     
     stage('CheckoutCode'){
-        git branch: 'main', credentialsId: 'Jenkins', url: 'https://github.com/msdeepak052/java-deepak-webapp.git
+        git branch: 'main', credentialsId: 'Jenkins', url: 'https://github.com/msdeepak052/java-deepak-webapp.git'
     }
     
     // Build stage
