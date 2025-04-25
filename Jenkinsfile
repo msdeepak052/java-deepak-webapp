@@ -11,7 +11,7 @@ node{
     // Git checkout stage 
     
     stage('CheckoutCode'){
-        git branch: 'development', credentialsId: 'Jenkins', url: 'https://github.com/msdeepak052/java-deepak-webapp.git'
+        git branch: 'main', credentialsId: 'Jenkins', url: 'https://github.com/msdeepak052/java-deepak-webapp.git
     }
     
     // Build stage
@@ -36,10 +36,10 @@ node{
     //Deploy artifact to Tomcat Server
     
     stage('DeployToTomcatServer'){
-        sshagent(['a062804f-f225-4cc4-a0b8-5e796153a4a9']) {
+        sshagent(['cf4fd662-cacd-45fa-ab1b-f4a8716889b1']) {
         sh 'ls -lrt'
         sh 'pwd'
-        sh "scp -o StrictHostKeyChecking=no target/java-deepak-webapp.war ec2-user@13.201.129.195:/opt/tomcat9/webapps"
+        sh "scp -o StrictHostKeyChecking=no target/java-deepak-webapp.war ubuntu@13.232.172.14:/opt/tomcat9/webapps"
         sh 'pwd'
         sh 'ls -l target'
         }
