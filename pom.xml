@@ -18,8 +18,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- SonarQube properties -->
-        <sonar.host.url>http://3.110.128.87:9000/</sonar.host.url>
-        <sonar.login>squ_b00a359d35737d6dd78f1c19d1671f7410bc305d</sonar.login>
+        <sonar.host.url>http://13.127.200.43:9000/</sonar.host.url>
+        <sonar.login>squ_0b27ca03067df0e76337c3d922ffd5763f375fb4</sonar.login>
         <sonar.projectKey>com.deepak:webapp</sonar.projectKey>
         <sonar.projectName>Java Deepak WebApp</sonar.projectName>
         <sonar.projectVersion>1.0.0</sonar.projectVersion>
@@ -65,13 +65,13 @@
         <!-- Release Repository -->
         <repository>
             <id>nexus</id>
-            <url>http://13.201.115.0:8081/repository/java-web-app-releases/</url>
+            <url>http://13.232.57.127:8081/repository/java-web-app-releases/</url>
         </repository>
 
         <!-- Snapshot Repository -->
         <snapshotRepository>
             <id>nexus</id>
-            <url>http://13.201.115.0:8081/repository/java-web-app-snapshot/</url>
+            <url>http://13.232.57.127:8081/repository/java-web-app-snapshot/</url>
         </snapshotRepository>
     </distributionManagement>
 
