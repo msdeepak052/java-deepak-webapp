@@ -19,7 +19,7 @@
 
         <!-- SonarQube properties -->
         <sonar.host.url>http://13.127.200.43:9000/</sonar.host.url>
-        <sonar.login>squ_0b27ca03067df0e76337c3d922ffd5763f375fb4</sonar.login>
+        <sonar.login>squ_c4958b3aa2bee8a74ccbaf287ca0dcc5d0c6b210</sonar.login>
         <sonar.projectKey>com.deepak:webapp</sonar.projectKey>
         <sonar.projectName>Java Deepak WebApp</sonar.projectName>
         <sonar.projectVersion>1.0.0</sonar.projectVersion>
