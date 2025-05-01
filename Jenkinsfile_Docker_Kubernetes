@@ -1,0 +1,63 @@
+pipeline {
+    agent any
+    
+    tools{
+        maven "maven-3.8.5"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', credentialsId: 'Jenkins', url: 'https://github.com/msdeepak052/java-deepak-webapp.git'
+            }
+        }
+        //Maven Build
+        
+        stage('Maven Build') {
+            steps {
+                sh "mvn clean package"
+            }
+        }
+        
+        // SonarQube Check
+        
+        stage('SonarQube Check') {
+            steps {
+                sh "mvn sonar:sonar"
+            }
+        }
+        
+        // Nexus Repo Upload
+        
+        stage('Nexus Repo Upload') {
+            steps {
+                sh "mvn deploy"
+            }
+        }
+        
+        // Docker Build Image
+        
+        stage('Docker Build Image') {
+            steps {
+                // sh "ls -lrt"
+                // sh "pwd"
+                sh "docker build -t devopsdktraining/java-deepak-webapp:2 ."
+            }
+        }
+        
+        // Kubernetes Deployment
+        
+        stage('Kubernetes Deployment') {
+            steps {
+                // sh "ls -lrt"
+                // sh "pwd"
+                sh "kubectl apply -f k8s-manifest-javawebapp.yaml"
+            }
+        }
+        
+        
+        
+        
+        
+    }
+}
